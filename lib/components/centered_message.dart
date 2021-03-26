@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:happy_postcode_flutter/components/app_theme.dart';
 
 class CenteredMessage extends StatelessWidget {
   final String message;
@@ -26,7 +25,6 @@ class CenteredMessage extends StatelessWidget {
               child: Icon(
                 icon,
                 size: iconSize,
-                color: AppTheme.buildTheme().primaryColor,
               ),
               visible: icon != null,
             ),
@@ -35,9 +33,7 @@ class CenteredMessage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 24.0),
             child: Text(
               message,
-              style: TextStyle(
-                  fontSize: fontSize,
-                  color: AppTheme.buildTheme().primaryColor),
+              style: TextStyle(fontSize: fontSize),
             ),
           ),
         ],

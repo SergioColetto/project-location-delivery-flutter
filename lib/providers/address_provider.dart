@@ -1,24 +1,19 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:happy_postcode_flutter/models/address.dart';
-import 'package:http_interceptor/http_interceptor.dart';
-import 'package:postcode/postcode.dart';
+import 'package:happy_postcode_flutter/service/network/network_manager.dart';
+import 'package:happy_postcode_flutter/service/postcode_service_imp.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AddressProvider extends ChangeNotifier {
-  String _apikey = 'iddqd';
-  String _url = 'api.ideal-postcodes.co.uk';
+  final service = PostcodeServiceImp(NetworkRequestManager.instance.service);
 
-  String _urlPrivado = 'location-delivery.herokuapp.com';
   String oldSearchPostcode = '';
 
   List<Address> _addresses = [];
   List<Address> _route = [];
-  final client =
-      HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
 
   UnmodifiableListView<Address> get addresses =>
       UnmodifiableListView(_addresses);
@@ -35,68 +30,21 @@ class AddressProvider extends ChangeNotifier {
 
   Future<List<Address>> findByPostcode(
       BuildContext context, final String postcode) async {
-    if (!isValid(postcode)) {
-      _dialog(context, "Invalid Postcode");
-      return null;
-    }
-
-    final response = await client.get(
-        Uri.https('$_url', 'v1/postcodes/$postcode',
-            <String, String>{'api_key': _apikey}),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        });
-
-    try {
-      Map<String, dynamic> body = jsonDecode(response.body);
-      _addresses = builderAddresses(body['result']);
-      _sendAddressToPrivateServer();
-    } on NoSuchMethodError catch (_) {
-      if (response.statusCode == 404) {
-        _dialog(context, "Postcode Not Found");
-      }
-      if (response.statusCode == 402) {
-        _dialog(context,
-            "Limit reached. One of your lookup limits has been breached for today");
-      }
-
-      _addresses = [];
-    }
-
+    _addresses = await service.findByPostcode(postcode);
     return addresses;
   }
 
   Future<List<Address>> findPrivado(
       BuildContext context, final String postcode) async {
-    final response = await client.get(
-      Uri.https(_urlPrivado, 'api/location', <String, String>{
-        'postcode': postcode,
-      }),
-    );
-
-    try {
-      final body = json.decode(response.body);
-      _addresses = builderAddresses(body);
-    } on NoSuchMethodError catch (_) {
-      if (response.statusCode == 404) {
-        _dialog(context, "Postcode Not Found");
-      }
-      if (response.statusCode == 402) {
-        _dialog(context,
-            "Limit reached. One of your lookup limits has been breached for today");
-      }
-      _addresses = [];
-    }
-
     return addresses;
   }
 
   void routeAdd(BuildContext context, Address address) {
-    if (_route.contains(address)) return;
-    if (_route.length >= 9) {
+    if (_route.length == 9) {
       _dialog(context, "Limit of address in route");
       return;
     }
+    if (_route.contains(address)) return;
     _route.add(address);
     notifyListeners();
   }
@@ -173,15 +121,7 @@ class AddressProvider extends ChangeNotifier {
         barrierDismissible: false);
   }
 
-  void _sendAddressToPrivateServer() {
-    client.post(
-      Uri.https('location-delivery.herokuapp.com', 'api/location'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(_addresses),
-    );
-  }
+  void _sendAddressToPrivateServer() {}
 
   bool includes(Address address) {
     return _route.contains(address);
@@ -193,19 +133,5 @@ class AddressProvider extends ChangeNotifier {
 
   void dialog(BuildContext context, String msg) {
     _dialog(context, msg);
-  }
-}
-
-class LoggingInterceptor implements InterceptorContract {
-  @override
-  Future<RequestData> interceptRequest({RequestData data}) async {
-    print(data.url);
-    return data;
-  }
-
-  @override
-  Future<ResponseData> interceptResponse({ResponseData data}) async {
-    print(data.body);
-    return data;
   }
 }

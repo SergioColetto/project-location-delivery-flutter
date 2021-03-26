@@ -8,7 +8,10 @@ class NavigateButton extends StatelessWidget {
     return Consumer<AddressProvider>(
       builder: (context, provider, child) => FloatingActionButton(
           elevation: 0,
-          child: Icon(Icons.navigation_outlined),
+          child: Icon(
+            Icons.navigation_outlined,
+            color: Colors.white,
+          ),
           onPressed: () async {
             provider.launchRoute(context);
           }),

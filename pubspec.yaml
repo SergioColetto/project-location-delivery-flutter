@@ -29,14 +29,15 @@ dependencies:
   cupertino_icons: ^1.0.0
   http_interceptor: any
   http: ^0.12.0+2
-  font_awesome_flutter: ^8.8.1
   provider: ^4.3.2+2
-  reorderables:
   path_provider: ^1.6.24
+  reorderables:
   url_launcher: ^5.5.0
-  animate_do:
-  postcode:
   flutter_skeleton:
+  flutter_slidable: ^0.5.7
+  postcode:
+  flutter_dotenv:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:

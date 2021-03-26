@@ -3,7 +3,7 @@ import 'package:flutter_skeleton/flutter_skeleton.dart';
 import 'package:happy_postcode_flutter/components/app_theme.dart';
 import 'package:happy_postcode_flutter/components/centered_message.dart';
 import 'package:happy_postcode_flutter/models/address.dart';
-import 'package:happy_postcode_flutter/pages/search_delegate_page.dart';
+import 'package:happy_postcode_flutter/pages/main_page.dart';
 import 'package:happy_postcode_flutter/providers/address_provider.dart';
 import 'package:postcode/postcode.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class DataSearch extends SearchDelegate {
           case ConnectionState.waiting:
             return ListSkeleton(
               style: SkeletonStyle(
-                theme: SkeletonTheme.Light,
+                theme: SkeletonTheme.Dark,
                 isShowAvatar: true,
                 barCount: 2,
                 isAnimation: true,
@@ -91,30 +91,33 @@ class DataSearch extends SearchDelegate {
     );
   }
 
-  Row _buildRow(
+  Widget _buildRow(
       AddressProvider provider, Address address, BuildContext context) {
-    return Row(
-      children: [
-        IconButton(
-            icon: Icon(Icons.navigation, color: Colors.grey),
-            onPressed: () {
-              provider.launchCoordinates(address.latitude, address.longitude);
-            }),
-        Expanded(
-          child: ListTile(
-            title: Text(address.line1),
-            subtitle: Text('${address.postcode} ${address.line3}'),
+    return Card(
+      child: Row(
+        children: [
+          IconButton(
+              icon: Icon(Icons.navigation, color: Colors.grey),
+              onPressed: () {
+                provider.launchCoordinates(address.latitude, address.longitude);
+              }),
+          Expanded(
+            child: ListTile(
+              title: Text('${address.line1}'),
+              subtitle:
+                  Text('${address.line2} ${address.line3} ${address.postcode}'),
+            ),
           ),
-        ),
-        IconButton(
-          icon: Icon(Icons.add_circle,
-              color: provider.includes(address) ? Colors.green : Colors.grey),
-          onPressed: () {
-            provider.routeAdd(context, address);
-            this.close(context, SearchDelegatePage());
-          },
-        ),
-      ],
+          IconButton(
+            icon: Icon(Icons.add_circle,
+                color: provider.includes(address) ? Colors.green : Colors.grey),
+            onPressed: () {
+              provider.routeAdd(context, address);
+              this.close(context, MainPage());
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -136,7 +139,6 @@ class DataSearch extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    final ThemeData base = AppTheme.buildTheme();
-    return base;
+    return Provider.of<ThemeChanger>(context).currentTheme;
   }
 }

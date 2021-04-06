@@ -11,7 +11,7 @@ class MyRoutesPage extends StatelessWidget {
         body: Container(
           child: CenteredMessage(
             'My Routes',
-            icon: Icons.construction,
+            icon: Icons.map_outlined,
           ),
         ),
       ),

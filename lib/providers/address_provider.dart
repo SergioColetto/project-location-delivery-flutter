@@ -14,11 +14,12 @@ class AddressProvider extends ChangeNotifier {
 
   List<Address> _addresses = [];
   List<Address> _route = [];
+  List<Address> _favorite = [];
 
   UnmodifiableListView<Address> get addresses =>
       UnmodifiableListView(_addresses);
-
   UnmodifiableListView<Address> get route => UnmodifiableListView(_route);
+  UnmodifiableListView<Address> get favorite => UnmodifiableListView(_favorite);
 
   int get totalInRoute => _route.length;
 

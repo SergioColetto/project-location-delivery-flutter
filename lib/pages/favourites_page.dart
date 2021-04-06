@@ -11,7 +11,7 @@ class FavouritesPage extends StatelessWidget {
         body: Container(
           child: CenteredMessage(
             'Favourites',
-            icon: Icons.construction,
+            icon: Icons.favorite,
           ),
         ),
       ),

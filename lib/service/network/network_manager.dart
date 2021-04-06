@@ -10,8 +10,8 @@ class NetworkRequestManager {
   HttpClientWithInterceptor service;
 
   NetworkRequestManager._init() {
-    print("NetworkRequestManager._init()");
-    service = HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
+    service =
+        HttpClientWithInterceptor.build(interceptors: [LoggingInterceptor()]);
   }
 }
 

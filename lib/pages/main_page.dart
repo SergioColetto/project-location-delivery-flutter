@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:happy_postcode_flutter/components/app_theme.dart';
+import 'package:happy_postcode_flutter/components/custom_navigation_bar.dart';
+import 'package:happy_postcode_flutter/components/navigate_button.dart';
 import 'package:happy_postcode_flutter/pages/destinations_page.dart';
 import 'package:happy_postcode_flutter/pages/favourites_page.dart';
 import 'package:happy_postcode_flutter/pages/myroutes_page.dart';
@@ -56,6 +58,9 @@ class MainPage extends StatelessWidget {
                 // provider.totalInRoute > 0 ? NavigateButton() : Container()
               ],
             ),
+            floatingActionButton: NavigateButton(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
           ),
         ),
       ),
@@ -97,7 +102,7 @@ class _MenuPrincipal extends StatelessWidget {
       child: Container(
         child: Column(
           children: <Widget>[
-            Expanded(child: _ListaOpciones()),
+            // Expanded(child: _ListaOpciones()),
             SafeArea(
               child: Expanded(
                 child: ListTile(

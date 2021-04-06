@@ -3,6 +3,7 @@ import 'package:happy_postcode_flutter/components/app_theme.dart';
 import 'package:happy_postcode_flutter/pages/main_page.dart';
 import 'package:happy_postcode_flutter/pages/settings_page.dart';
 import 'package:happy_postcode_flutter/providers/address_provider.dart';
+import 'package:happy_postcode_flutter/providers/favorite_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -10,6 +11,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => new AddressProvider()),
+        ChangeNotifierProvider(create: (_) => new FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => new ThemeChanger(2)),
       ],
       child: PostcodeApp(),

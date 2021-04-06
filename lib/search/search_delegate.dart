@@ -5,6 +5,7 @@ import 'package:happy_postcode_flutter/components/centered_message.dart';
 import 'package:happy_postcode_flutter/models/address.dart';
 import 'package:happy_postcode_flutter/pages/main_page.dart';
 import 'package:happy_postcode_flutter/providers/address_provider.dart';
+import 'package:happy_postcode_flutter/providers/favorite_provider.dart';
 import 'package:postcode/postcode.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +41,7 @@ class DataSearch extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     final provider = Provider.of<AddressProvider>(context, listen: false);
+    final favourite = Provider.of<FavoriteProvider>(context, listen: false);
 
     if (!isValid(query)) {
       return CenteredMessage(
@@ -72,7 +74,8 @@ class DataSearch extends SearchDelegate {
               if (provider.addresses.isNotEmpty)
                 return ListView(
                     children: provider.addresses
-                        .map((address) => _buildRow(provider, address, context))
+                        .map((address) =>
+                            _buildRow(provider, favourite, address, context))
                         .toList());
             }
             return CenteredMessage(
@@ -91,8 +94,8 @@ class DataSearch extends SearchDelegate {
     );
   }
 
-  Widget _buildRow(
-      AddressProvider provider, Address address, BuildContext context) {
+  Widget _buildRow(AddressProvider provider, FavoriteProvider favourite,
+      Address address, BuildContext context) {
     return Card(
       child: Row(
         children: [
@@ -107,6 +110,17 @@ class DataSearch extends SearchDelegate {
               subtitle:
                   Text('${address.line2} ${address.line3} ${address.postcode}'),
             ),
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite,
+                color: provider.includes(address) ? Colors.green : Colors.grey),
+            onPressed: () {
+              favourite.add(context, address);
+              this.close(context, MainPage());
+            },
+          ),
+          SizedBox(
+            width: 15,
           ),
           IconButton(
             icon: Icon(Icons.add_circle,
@@ -124,10 +138,11 @@ class DataSearch extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     final provider = Provider.of<AddressProvider>(context, listen: false);
+    final favourite = Provider.of<FavoriteProvider>(context, listen: false);
 
     return ListView(
         children: provider.addresses
-            .map((address) => _buildRow(provider, address, context))
+            .map((address) => _buildRow(provider, favourite, address, context))
             .toList());
   }
 

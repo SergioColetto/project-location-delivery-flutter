@@ -6,12 +6,9 @@ class NavigateButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddressProvider>(
-      builder: (context, provider, child) => FloatingActionButton(
-          elevation: 0,
-          child: Icon(
-            Icons.navigation_outlined,
-            color: Colors.white,
-          ),
+      builder: (context, provider, child) => FloatingActionButton.extended(
+          icon: Icon(Icons.navigation_outlined),
+          label: Text("NAVIGATE"),
           onPressed: () async {
             provider.launchRoute(context);
           }),

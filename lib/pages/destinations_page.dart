@@ -14,7 +14,7 @@ class DestinationsPage extends StatelessWidget {
             : Container(
                 child: CenteredMessage(
                   'Destinations',
-                  icon: Icons.construction,
+                  icon: Icons.location_on_outlined,
                 ),
               ),
       ),
